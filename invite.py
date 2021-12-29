@@ -34,15 +34,15 @@ def rsvp_post():
                 )
                 db.commit()
                 return redirect(url_for("guestlist"))
+               
+            cursor.close()
+            db.close()
         
             flash(error)
         
         return render_template('rsvp.html')
     except Exception as e:
         print(e)
-    finally:
-        cursor.close()
-        db.close()
 
 @app.route('/guestlist')
 def guestlist():
@@ -54,14 +54,13 @@ def guestlist():
         guestRows = cursor.fetchall()
         respone = jsonify(guestRows)
         respone.status_code = 200
+        cursor.close()
+        conn.close()
         return respone
     except Exception as e:
         print(e)
-    finally:
-        cursor.close()
-        conn.close()
     
-    return render_template('guestlist.html')
+    return render_template('base.html')
 
 if __name__ == '__main__':
     app.run()
